@@ -170,7 +170,11 @@
 <body>
     <nav class="navbar navbar-light bg-white border-bottom px-4 mb-4">
         <span class="navbar-brand fw-bold text-primary"><i class="bi bi-shield-lock-fill me-2"></i>MED ADMIN</span>
-        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-arrow-left"></i> Xem trang chủ</a>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-arrow-left"></i> Xem trang chủ</a>
+            <span id="adminUser" class="badge bg-white text-primary shadow-sm d-none"></span>
+            <button id="logoutBtn" class="btn btn-outline-secondary btn-sm rounded-pill d-none">Đăng xuất</button>
+        </div>
     </nav>
 
     <div class="container py-4">
@@ -309,10 +313,16 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/api.js"></script> 
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
     
     <script>
+        const currentUser = requireAdmin();
         $(document).ready(() => {
+            if (currentUser) {
+                $('#adminUser').text(`Xin chào, ${currentUser.fullName}`).removeClass('d-none');
+                $('#logoutBtn').removeClass('d-none').on('click', logout);
+            }
             if (typeof MedService === 'undefined') {
                 alert("Lỗi: Không tìm thấy file api.js hoặc MedService chưa được định nghĩa!");
                 return;

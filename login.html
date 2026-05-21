@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - MedReminder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at top left, rgba(91, 60, 255, 0.2), transparent 30%),
+                        radial-gradient(circle at bottom right, rgba(95, 196, 255, 0.14), transparent 35%),
+                        #eef2ff;
+            color: #242d4a;
+            min-height: 100vh;
+        }
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        .auth-card {
+            max-width: 980px;
+            width: 100%;
+            background: rgba(255,255,255,0.96);
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(45, 60, 130, 0.14);
+            overflow: hidden;
+        }
+        .auth-sidebar {
+            background: linear-gradient(180deg, rgba(91, 60, 255, 1), rgba(117, 136, 255, 0.95));
+            color: white;
+            padding: 40px 35px;
+            min-height: 100%;
+        }
+        .auth-sidebar h2 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+        }
+        .auth-sidebar p {
+            color: rgba(255,255,255,0.85);
+            line-height: 1.7;
+        }
+        .auth-sidebar .note {
+            margin-top: 2rem;
+            background: rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 18px;
+        }
+        .auth-form {
+            padding: 40px 35px;
+        }
+        .auth-form h3 {
+            font-size: 1.9rem;
+            margin-bottom: 1rem;
+        }
+        .auth-form label {
+            font-weight: 600;
+        }
+        .auth-form .form-control {
+            border-radius: 18px;
+            padding: 1rem 1.15rem;
+            background: #f5f7ff;
+            border: 1px solid rgba(110, 125, 255, 0.18);
+        }
+        .auth-form .btn-submit {
+            border-radius: 999px;
+            padding: 0.95rem 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 16px 32px rgba(91, 60, 255, 0.18);
+        }
+        .auth-footer {
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            color: #6f7b9d;
+        }
+        .auth-footer a {
+            color: var(--bs-primary);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .text-danger.d-none {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <section class="auth-page">
+        <div class="auth-card row g-0">
+            <div class="col-lg-5 auth-sidebar d-flex flex-column justify-content-center">
+                <div>
+                    <h2>Chào mừng trở lại!</h2>
+                    <p>Đăng nhập vào MedReminder để quản lý lịch uống thuốc, nhận nhắc nhở và theo dõi tiến độ điều trị của bạn.</p>
+                    <div class="note">
+                        <p class="mb-1"><strong>Tài khoản mẫu admin:</strong></p>
+                        <p class="mb-0">admin@medreminder.com / Admin@123</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 auth-form">
+                <form id="loginForm">
+                    <h3>Đăng nhập</h3>
+                    <div class="mb-3">
+                        <label for="loginEmail" class="form-label">Email</label>
+                        <input type="email" id="loginEmail" class="form-control" placeholder="email@example.com" required>
+                        <div id="loginEmailError" class="form-text text-danger d-none"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginPassword" class="form-label">Mật khẩu</label>
+                        <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                        <div id="loginPasswordError" class="form-text text-danger d-none"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit w-100">Đăng nhập</button>
+                    <div class="auth-footer text-center">
+                        Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
