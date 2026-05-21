@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MedReminder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary: #4318ff; --secondary: #a3aed0; --bg: #f4f7fe; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: #2b3674; }
+        .nav-tabs { border: none; gap: 10px; }
+        .nav-link { border: none !important; border-radius: 12px !important; color: var(--secondary); font-weight: 600; }
+        .nav-link.active { background: var(--primary) !important; color: white !important; box-shadow: 0 4px 12px rgba(67, 24, 255, 0.2); }
+        .admin-card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .form-control-custom { border-radius: 12px; padding: 12px; border: 1px solid #e0e5f2; margin-bottom: 15px; }
+        .table thead th { background: #f8f9fa; color: var(--secondary); text-transform: uppercase; font-size: 0.7rem; border: none; }
+        .btn-action { border-radius: 10px; font-weight: 600; padding: 8px 20px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-white border-bottom px-4 mb-4">
+        <span class="navbar-brand fw-bold text-primary"><i class="bi bi-shield-lock-fill me-2"></i>MED ADMIN</span>
+        <a href="index.html" class="btn btn-outline-secondary btn-sm rounded-pill"><i class="bi bi-arrow-left"></i> Xem trang chủ</a>
+    </nav>
+
+    <div class="container">
+        <ul class="nav nav-tabs mb-4" id="adminTab" role="tablist">
+            <li class="nav-item">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#med-content">
+                    <i class="bi bi-capsule me-2"></i>Quản lý Thuốc
+                </button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#patient-content">
+                    <i class="bi bi-people me-2"></i>Danh sách Bệnh nhân
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="med-content">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5 class="fw-bold">Danh mục Thuốc & Lịch nhắc</h5>
+                        <button class="btn btn-primary btn-action shadow" onclick="openModal()">
+                            <i class="bi bi-plus-lg me-2"></i>Thêm thuốc mới
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr><th>Tên thuốc</th><th>Liều dùng</th><th>Giờ nhắc</th><th>Thao tác</th></tr>
+                            </thead>
+                            <tbody id="medTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="patient-content">
+                <div class="admin-card">
+                    <div class="d-flex justify-content-between mb-4">
+                        <h5 class="fw-bold mb-0 align-self-center">Thông tin bệnh nhân hệ thống</h5>
+                        <button class="btn btn-success btn-action shadow" onclick="openPatientModal()">
+                            <i class="bi bi-person-plus-fill me-2"></i>Thêm bệnh nhân mới
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr><th>ID</th><th>Họ và Tên</th><th>Giới tính</th><th>Số điện thoại</th><th>Thao tác</th></tr>
+                            </thead>
+                            <tbody id="patientTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalMed" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow" style="border-radius: 25px;">
+                <div class="modal-body p-4">
+                    <h5 class="fw-bold mb-4" id="modalTitle">Thông tin thuốc</h5>
+                    <input type="hidden" id="editId">
+                    
+                    <label class="small fw-bold">Tên dược phẩm</label>
+                    <input type="text" id="inpName" class="form-control form-control-custom" placeholder="Tên thuốc...">
+                    
+                    <label class="small fw-bold">Liều lượng (viên)</label>
+                    <input type="number" id="inpDose" class="form-control form-control-custom" placeholder="Ví dụ: 1">
+                    
+                    <label class="small fw-bold">Giờ nhắc uống</label>
+                    <input type="time" id="inpTime" class="form-control form-control-custom">
+
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-primary btn-action py-3 shadow" id="btnSave">Lưu thông tin</button>
+                        <button class="btn btn-light btn-action py-3" data-bs-dismiss="modal">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPatient" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow" style="border-radius: 25px;">
+                <div class="modal-body p-4">
+                    <h5 class="fw-bold mb-4" id="modalPatientTitle">Thông tin bệnh nhân</h5>
+                    <input type="hidden" id="editPatientId">
+                    
+                    <label class="small fw-bold">Họ và tên</label>
+                    <input type="text" id="inpPatientName" class="form-control form-control-custom" placeholder="Nhập tên bệnh nhân...">
+                    
+                    <label class="small fw-bold">Giới tính</label>
+                    <select id="inpPatientGender" class="form-control form-control-custom">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                    
+                    <label class="small fw-bold">Số điện thoại</label>
+                    <input type="text" id="inpPatientPhone" class="form-control form-control-custom" placeholder="Nhập số điện thoại...">
+
+                    <div class="d-grid gap-2 mt-3">
+                        <button class="btn btn-success btn-action py-3 shadow" id="btnSavePatient">Lưu bệnh nhân</button>
+                        <button class="btn btn-light btn-action py-3" data-bs-dismiss="modal">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script> 
+    
+    <script>
+        $(document).ready(() => {
+            if (typeof MedService === 'undefined') {
+                alert("Lỗi: Không tìm thấy file api.js hoặc MedService chưa được định nghĩa!");
+                return;
+            }
+            renderMeds();
+            renderPatients();
+        });
+
+        // Tải thuốc (Giữ nguyên)
+        async function renderMeds() {
+            try {
+                const meds = await MedService.getAll();
+                const tbody = $('#medTableBody').empty();
+                meds.forEach(m => {
+                    tbody.append(`
+                        <tr>
+                            <td class="fw-bold text-primary">${m.name}</td>
+                            <td><span class="badge bg-light text-dark">${m.dosage} viên</span></td>
+                            <td><span class="text-danger fw-bold"><i class="bi bi-alarm me-1"></i>${m.time || '--:--'}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info border-0" onclick="openModal('${m.id}', '${m.name}', ${m.dosage}, '${m.time}')"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-outline-danger border-0" onclick="handleDelete('${m.id}')"><i class="bi bi-trash3-fill"></i></button>
+                            </td>
+                        </tr>`);
+                });
+            } catch (err) { console.error("Lỗi render thuốc:", err); }
+        }
+
+        // Tải bệnh nhân (Thêm nút sửa/xóa vào hàng)
+        async function renderPatients() {
+            try {
+                const patients = await PatientService.getAll();
+                const tbody = $('#patientTableBody').empty();
+                patients.forEach(p => {
+                    tbody.append(`
+                        <tr>
+                            <td class="text-muted small">#${p.id}</td>
+                            <td class="fw-bold">${p.name}</td>
+                            <td>${p.gender || 'N/A'}</td>
+                            <td>${p.phone || 'N/A'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-info border-0" onclick="openPatientModal('${p.id}', '${p.name}', '${p.gender}', '${p.phone}')"><i class="bi bi-pencil-square"></i></button>
+                                <button class="btn btn-sm btn-outline-danger border-0" onclick="handleDeletePatient('${p.id}')"><i class="bi bi-trash3-fill"></i></button>
+                            </td>
+                        </tr>`);
+                });
+            } catch (err) { console.error("Lỗi render bệnh nhân:", err); }
+        }
+
+        // Mở Modal Thuốc (Giữ nguyên)
+        function openModal(id = '', name = '', dose = '', time = '') {
+            $('#editId').val(id);
+            $('#inpName').val(name);
+            $('#inpDose').val(dose);
+            $('#inpTime').val(time);
+            $('#modalTitle').text(id ? "Chỉnh sửa thuốc" : "Thêm thuốc mới");
+            $('#modalMed').modal('show');
+        }
+
+        // Lưu thông tin Thuốc (Giữ nguyên)
+        $('#btnSave').click(async function() {
+            const id = $('#editId').val();
+            const data = {
+                name: $('#inpName').val(),
+                dosage: parseInt($('#inpDose').val()),
+                time: $('#inpTime').val()
+            };
+
+            if (!data.name || isNaN(data.dosage)) {
+                alert("Vui lòng nhập tên thuốc và liều lượng hợp lệ!");
+                return;
+            }
+
+            try {
+                if (id) {
+                    await MedService.update(id, data);
+                } else {
+                    await MedService.create(data);
+                }
+                $('#modalMed').modal('hide');
+                renderMeds();
+            } catch (err) { alert("Lỗi khi lưu dữ liệu: " + err.message); }
+        });
+
+        // Xóa thuốc (Giữ nguyên)
+        async function handleDelete(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa thuốc này?")) {
+                try {
+                    await MedService.delete(id);
+                    renderMeds();
+                } catch (err) { alert("Lỗi khi xóa: " + err.message); }
+            }
+        }
+
+        /* ==========================================================================
+           PHẦN CODE THÊM MỚI: XỬ LÝ LOGIC CHO BỆNH NHÂN
+           ========================================================================== */
+        
+        // Mở Modal Bệnh nhân
+        function openPatientModal(id = '', name = '', gender = 'Nam', phone = '') {
+            $('#editPatientId').val(id);
+            $('#inpPatientName').val(name);
+            $('#inpPatientGender').val(gender);
+            $('#inpPatientPhone').val(phone);
+            $('#modalPatientTitle').text(id ? "Chỉnh sửa bệnh nhân" : "Thêm bệnh nhân mới");
+            $('#modalPatient').modal('show');
+        }
+
+        // Xử lý click nút lưu bệnh nhân (Hỗ trợ cả POST và PUT)
+        $('#btnSavePatient').click(async function() {
+            const id = $('#editPatientId').val();
+            const data = {
+                name: $('#inpPatientName').val(),
+                gender: $('#inpPatientGender').val(),
+                phone: $('#inpPatientPhone').val()
+            };
+
+            if (!data.name || !data.phone) {
+                alert("Vui lòng nhập đầy đủ Tên và Số điện thoại!");
+                return;
+            }
+
+            try {
+                if (id) {
+                    await PatientService.update(id, data);
+                } else {
+                    await PatientService.create(data);
+                }
+                $('#modalPatient').modal('hide');
+                renderPatients();
+            } catch (err) { 
+                alert("Lỗi khi lưu bệnh nhân: " + err.message); 
+            }
+        });
+
+        // Xóa bệnh nhân
+        async function handleDeletePatient(id) {
+            if (confirm("Xác nhận xóa bệnh nhân này?")) {
+                try {
+                    await PatientService.delete(id);
+                    renderPatients();
+                } catch (err) { 
+                    alert("Lỗi khi xóa bệnh nhân: " + err.message); 
+                }
+            }
+        }
+    </script>
+</body>
+</html>
